@@ -15,6 +15,7 @@ import Onboarding from './src/Onboarding';
 import SlipInbox from './src/SlipInbox';
 import { useSlipWatch } from './src/slipWatch';
 import { haptic } from './src/motion';
+import { FEATURES } from './src/features';
 import TodayScreen from './src/screens/TodayScreen';
 import CalendarScreen from './src/screens/CalendarScreen';
 import JarsScreen from './src/screens/JarsScreen';
@@ -57,7 +58,8 @@ function Main({ t }: { t: Theme }) {
     });
   }, []);
 
-  const watch = useSlipWatch(apiKey, tx);
+  // With slips switched off the watcher gets no key, so it never reads the photo album.
+  const watch = useSlipWatch(FEATURES.slips ? apiKey : '', tx);
 
   const commit = (next: Stored[]) => { setTx(next); saveTx(next).catch(() => {}); };
   const saveFound = (rows: { tx: Tx; assetId: string }[]) => {
@@ -105,9 +107,9 @@ function Main({ t }: { t: Theme }) {
     <SafeAreaView style={{ flex: 1, backgroundColor: t.bg }} edges={['top', 'left', 'right']}>
       <View style={{ flex: 1 }}>
         {tab === 'today' && (
-          <TodayScreen t={t} tx={tx} budget={budget} loaded={loaded} onEdit={openEdit} onAdd={() => openAdd('expense')} onScan={() => openAdd('scan')}
+          <TodayScreen t={t} tx={tx} budget={budget} loaded={loaded} onEdit={openEdit} onAdd={() => openAdd('expense')} onScan={FEATURES.slips ? () => openAdd('scan') : undefined}
             onSamples={addSamples} onSettings={() => go('settings')} onCalendar={() => go('calendar')} onStory={() => go('story')}
-            slipCount={watch.inbox.length} onSlips={() => setInboxOpen(true)} />
+            slipCount={FEATURES.slips ? watch.inbox.length : 0} onSlips={() => setInboxOpen(true)} />
         )}
         {tab === 'calendar' && <CalendarScreen t={t} tx={tx} view={view} onShift={shift} onEdit={openEdit} />}
         {tab === 'jars' && <JarsScreen t={t} tx={tx} budget={budget} jars={jars} onSaveJars={(j) => { setJars(j); saveJars(j).catch(() => {}); }} onBudget={() => go('settings')} />}
@@ -129,7 +131,7 @@ function Main({ t }: { t: Theme }) {
         onClose={closeSheet}
         onNeedKey={() => { closeSheet(); go('settings'); }} />
 
-      <SlipInbox t={t} visible={inboxOpen} inbox={watch.inbox} onSave={saveFound} onSkip={watch.dismiss} onClose={() => setInboxOpen(false)} />
+      {FEATURES.slips && <SlipInbox t={t} visible={inboxOpen} inbox={watch.inbox} onSave={saveFound} onSkip={watch.dismiss} onClose={() => setInboxOpen(false)} />}
     </SafeAreaView>
   );
 }

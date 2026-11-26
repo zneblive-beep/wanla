@@ -7,6 +7,7 @@ import { readSlip, SlipError } from './slip';
 import { Chip, Dashes, Icon, INK, Pop, RoundBtn, T, Zigzag } from './ui';
 import { FONT, Theme } from './theme';
 import { Enter, haptic, ND, useLoop, useReducedMotion } from './motion';
+import { FEATURES } from './features';
 
 export type SheetMode = 'expense' | 'income' | 'scan';
 
@@ -45,7 +46,7 @@ export default function AddSheet({ t, visible, editing, mode, allTx, apiKey, onS
     } else {
       const ty: TxType = mode === 'income' ? 'income' : 'expense';
       setType(ty); setCat(CATS[ty][0].id); setCatTouched(false); setText(''); setDate(todayStr()); setRef(undefined);
-      if (mode === 'scan' && !autoScanned.current) { autoScanned.current = true; setTimeout(() => chooseSource(), 350); }
+      if (FEATURES.slips && mode === 'scan' && !autoScanned.current) { autoScanned.current = true; setTimeout(() => chooseSource(), 350); }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible, editing, mode]);
@@ -221,7 +222,7 @@ export default function AddSheet({ t, visible, editing, mode, allTx, apiKey, onS
               </>
             )}
 
-            {!editing && (
+            {!editing && FEATURES.slips && (
               <Pop onPress={chooseSource} label="สแกนสลิป" radius={20} style={s.scan} wrap={{ marginTop: 6 }}>
                 <View style={[s.scanIcon, { backgroundColor: t.accent }]}><Icon name="line-scan" size={20} color={INK} /></View>
                 <View style={{ flex: 1 }}>

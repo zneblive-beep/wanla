@@ -7,7 +7,7 @@ import type { Theme } from '../theme';
 
 type Props = {
   t: Theme; tx: (Tx & { sample?: boolean })[]; budget: number; loaded: boolean; name?: string;
-  onEdit: (x: Tx) => void; onAdd: () => void; onScan: () => void; onSamples: () => void;
+  onEdit: (x: Tx) => void; onAdd: () => void; onScan?: () => void; onSamples: () => void;
   onSettings: () => void; onCalendar: () => void; onStory: () => void;
   slipCount: number; onSlips: () => void;
 };
@@ -132,7 +132,7 @@ export default function TodayScreen({ t, tx, budget, loaded, onEdit, onAdd, onSc
                 <T size={14} color={t.muted} style={{ textAlign: 'center' }}>ยังไม่ได้จดอะไรวันนี้{'\n'}พิมพ์ “ข้าวมันไก่ 55” ก็จดได้แล้ว</T>
                 <View style={{ flexDirection: 'row', gap: 10 }}>
                   <Chip bg={t.accent} onPress={onAdd}>+ จดเลย</Chip>
-                  <Chip onPress={onScan}>สแกนสลิป</Chip>
+                  {onScan && <Chip onPress={onScan}>สแกนสลิป</Chip>}
                   {tx.length === 0 && <Chip onPress={onSamples}>ดูตัวอย่าง</Chip>}
                 </View>
               </View>

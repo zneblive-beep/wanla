@@ -3,6 +3,7 @@ import { Alert, Pressable, ScrollView, StyleSheet, Switch, TextInput, View } fro
 import { money } from './model';
 import type { IconName } from './model';
 import type { SlipWatch } from './slipWatch';
+import { FEATURES } from './features';
 import { Icon, INK, Pop, RoundBtn, T } from './ui';
 import { FONT, Theme } from './theme';
 
@@ -84,23 +85,27 @@ export default function Settings({ t, budget, apiKey, hasSamples, txCount, watch
         <Pressable onPress={onQuiz}><T w="semi" size={13} color={t.muted}>ทำแบบทดสอบสไตล์เงินอีกครั้ง ›</T></Pressable>
       </Pop>
 
-      <Pop radius={24} style={s.card}>
-        <Head t={t} icon="line-scan" bg={t.sky} title="อ่านสลิปด้วย Claude" sub={apiKey ? `ใส่คีย์แล้ว ลงท้าย …${apiKey.slice(-4)}` : 'ใส่ API key เพื่อเปิดใช้'} />
-        <T size={13} color={t.muted} style={{ lineHeight: 20 }}>
-          ขอคีย์ได้ที่ console.anthropic.com คีย์เก็บในที่เก็บรหัสที่ปลอดภัยของเครื่องนี้ และคิดค่าใช้จ่ายตามการใช้งานของคีย์
-        </T>
-        <TextInput value={k} onChangeText={setK} placeholder="sk-ant-..." placeholderTextColor={t.faint} secureTextEntry autoCapitalize="none" autoCorrect={false} style={[s.input, { fontFamily: FONT.regular, fontSize: 15 }]} />
-        <View style={{ flexDirection: 'row', gap: 10 }}>
-          <Btn flex={2} label="บันทึกคีย์" bg={t.accent} onPress={() => { if (k.trim()) { onSaveKey(k.trim()); setK(''); } }} />
-          {!!apiKey && (
-            <Btn flex={1} label="ลบคีย์" color={t.expense} onPress={() => Alert.alert('ลบคีย์?', 'จะสแกนสลิปไม่ได้จนกว่าจะใส่ใหม่', [
-              { text: 'ยกเลิก', style: 'cancel' }, { text: 'ลบ', style: 'destructive', onPress: () => onSaveKey('') },
-            ])} />
-          )}
-        </View>
-      </Pop>
-
-      <AutoSlips t={t} apiKey={apiKey} watch={watch} />
+      {FEATURES.slips && (
+        <>
+          <Pop radius={24} style={s.card}>
+            <Head t={t} icon="line-scan" bg={t.sky} title="อ่านสลิปด้วย Claude" sub={apiKey ? `ใส่คีย์แล้ว ลงท้าย …${apiKey.slice(-4)}` : 'ใส่ API key เพื่อเปิดใช้'} />
+            <T size={13} color={t.muted} style={{ lineHeight: 20 }}>
+              ขอคีย์ได้ที่ console.anthropic.com คีย์เก็บในที่เก็บรหัสที่ปลอดภัยของเครื่องนี้ และคิดค่าใช้จ่ายตามการใช้งานของคีย์
+            </T>
+            <TextInput value={k} onChangeText={setK} placeholder="sk-ant-..." placeholderTextColor={t.faint} secureTextEntry autoCapitalize="none" autoCorrect={false} style={[s.input, { fontFamily: FONT.regular, fontSize: 15 }]} />
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+              <Btn flex={2} label="บันทึกคีย์" bg={t.accent} onPress={() => { if (k.trim()) { onSaveKey(k.trim()); setK(''); } }} />
+              {!!apiKey && (
+                <Btn flex={1} label="ลบคีย์" color={t.expense} onPress={() => Alert.alert('ลบคีย์?', 'จะสแกนสลิปไม่ได้จนกว่าจะใส่ใหม่', [
+                  { text: 'ยกเลิก', style: 'cancel' }, { text: 'ลบ', style: 'destructive', onPress: () => onSaveKey('') },
+                ])} />
+              )}
+            </View>
+          </Pop>
+    
+          <AutoSlips t={t} apiKey={apiKey} watch={watch} />
+        </>
+      )}
 
       <Pop radius={24} style={s.card}>
         <Head t={t} icon="flask-outline" bg={t.pink} title="ข้อมูลตัวอย่าง" sub="ลองดูหน้าตาแอปด้วยรายการสมมติ" />

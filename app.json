@@ -7,11 +7,16 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "com.wanla.app",
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
+      "package": "com.wanla.app",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#C6F432",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
@@ -36,7 +41,18 @@
         {
           "photosPermission": "ใช้เพื่อหาสลิปโอนเงินใหม่ในอัลบั้มของแอปธนาคาร แล้วอ่านยอดเงินให้อัตโนมัติ",
           "savePhotosPermission": "แอปนี้ไม่บันทึกรูปลงเครื่อง",
-          "granularPermissions": ["photo"]
+          "granularPermissions": [
+            "photo"
+          ]
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 180,
+          "resizeMode": "contain",
+          "backgroundColor": "#F7F1E3"
         }
       ]
     ]
